@@ -1,0 +1,482 @@
+I want you to act as a senior cloud engineer, DevOps architect, backend engineer, and technical mentor simultaneously.
+
+Your task is to teach me how to build a COMPLETE production-grade full stack cloud-native application from absolute beginning to final deployment in AWS.
+
+IMPORTANT:
+You must teach this project like LEGO instructions or an IKEA manual:
+
+* tiny steps
+* no skipped assumptions
+* no “you already know this”
+* no vague explanations
+* every click, command, file, folder, and configuration explained
+* every architecture decision explained
+* every AWS service explained visually and conceptually
+* every debugging step included
+* every terminal command included
+* every expected output included
+* every folder structure included
+* every configuration file included
+* every deployment validation step included
+
+I am a B.Tech Computer Engineering student learning cloud engineering and DevOps practically.
+
+The project stack is:
+
+FRONTEND:
+
+* React + Vite
+
+BACKEND:
+
+* Node.js
+* Express.js
+* PostgreSQL
+
+DEVOPS / CLOUD:
+
+* Docker
+* AWS ECS Fargate
+* AWS RDS PostgreSQL
+* AWS ECR
+* AWS CloudFront
+* AWS S3
+* AWS ALB
+* AWS VPC
+* AWS IAM
+* AWS CloudWatch
+* AWS Secrets Manager
+* GitHub Actions
+* Terraform
+
+The final architecture must look like this:
+
+Users
+↓
+CloudFront CDN
+↓
+Application Load Balancer
+↓
+ECS Fargate containers
+↓
+RDS PostgreSQL
+
+The architecture must be production-grade and secure:
+
+* frontend publicly accessible
+* backend private behind ALB
+* database isolated in database subnets
+* security groups layered properly
+* secrets stored securely
+* autoscaling enabled
+* monitoring enabled
+* health checks enabled
+* CI/CD enabled
+* Terraform used for infrastructure as code
+
+I want the ENTIRE project taught in ultra-detailed stages.
+
+FOR EVERY SINGLE STAGE:
+
+1. Explain the goal first
+2. Explain the architecture visually using ASCII diagrams
+3. Explain WHY we are doing this
+4. Explain the real-world industry relevance
+5. Explain common beginner mistakes
+6. Explain how to verify the step worked correctly
+7. Explain how this connects to later stages
+8. Explain security implications
+9. Explain production best practices
+10. Include troubleshooting section
+
+Structure the course/project in these exact phases:
+
+PHASE 0 — PREREQUISITES
+
+* Install Node.js
+* Install PostgreSQL
+* Install DBeaver
+* Install Docker Desktop
+* Install AWS CLI
+* Install Terraform
+* Install VS Code
+* Configure Git + GitHub
+* Configure AWS account safely
+* Setup MFA
+* Setup AWS budget alerts
+* Explain Free Tier limitations
+* Explain cost-saving practices
+* Teach Linux terminal basics
+* Teach Docker basics
+* Teach PostgreSQL basics
+* Teach AWS basics
+
+PHASE 1 — BUILD THE NODE.JS BACKEND LOCALLY
+
+* Create project folder
+* Initialize Node.js project
+* Install dependencies
+* Setup Express server
+* Setup routes
+* Setup middleware
+* Setup PostgreSQL connection
+* Create tables
+* Create seed data
+* Build:
+
+  * GET /health
+  * GET /api/items
+  * POST /api/items
+  * GET /metrics
+* Teach REST API concepts deeply
+* Teach environment variables
+* Teach connection pooling
+* Teach async/await
+* Teach proper folder structure
+* Add logging
+* Add validation
+* Add centralized error handling
+* Add production-ready structure
+
+VERY IMPORTANT:
+At every step:
+
+* show exact code
+* explain every line
+* explain why each dependency is used
+
+PHASE 2 — POSTGRESQL DEEP DIVE
+
+* Teach PostgreSQL fundamentals deeply
+* Tables
+* Relationships
+* Foreign keys
+* Indexes
+* Query optimization
+* Transactions
+* EXPLAIN ANALYZE
+* Connection pooling
+* Production database concepts
+* Backup concepts
+* Migration concepts
+* Teach how RDS differs from local PostgreSQL
+
+PHASE 3 — DOCKERIZE THE APPLICATION
+
+* Explain containers deeply
+* Explain images vs containers
+* Explain Docker networking
+* Explain Docker volumes
+* Build Dockerfile step by step
+* Explain multi-stage builds deeply
+* Explain image optimization
+* Build docker-compose setup
+* Run frontend + backend + PostgreSQL locally
+* Explain container debugging
+* Explain docker logs
+* Explain docker exec
+* Explain environment injection
+
+PHASE 4 — BUILD THE REACT FRONTEND
+
+* Create Vite React app
+* Explain Vite
+* Setup routing
+* Build API integration
+* Build item CRUD UI
+* Add loading states
+* Add error handling
+* Add production environment variables
+* Teach frontend deployment concepts
+* Build production frontend bundle
+
+PHASE 5 — AWS NETWORKING (VERY DETAILED)
+This section must be EXTREMELY detailed.
+
+Teach:
+
+* What is a VPC
+* CIDR blocks
+* Public vs private subnets
+* Availability Zones
+* Route tables
+* Internet Gateway
+* NAT Gateway
+* Security groups
+* NACLs
+* DNS
+* Elastic IPs
+
+Build:
+
+* VPC (10.0.0.0/16)
+* 2 public subnets
+* 2 private subnets
+* 2 database subnets
+* Internet Gateway
+* NAT Gateway
+* Route tables
+
+Explain visually:
+
+* traffic flow
+* packet movement
+* why ECS is private
+* why RDS is isolated
+
+Explain:
+
+* cost implications
+* security implications
+* production-grade networking
+
+PHASE 6 — AWS RDS POSTGRESQL
+
+* Create DB subnet group
+* Launch PostgreSQL 15
+* Explain storage types
+* Explain backups
+* Explain Multi-AZ
+* Explain encryption
+* Explain parameter groups
+* Configure Secrets Manager
+* Connect backend to RDS securely
+* Teach database security
+
+PHASE 7 — AWS ECR
+
+* Explain container registries
+* Create ECR repository
+* Authenticate Docker
+* Tag image
+* Push image
+* Explain image versioning
+* Explain rollback concepts
+
+PHASE 8 — ECS FARGATE DEPLOYMENT
+This section must be EXTREMELY detailed.
+
+Teach:
+
+* ECS concepts
+* Cluster
+* Service
+* Task definition
+* Task role
+* Execution role
+* Fargate
+* Scaling
+* Health checks
+* Service discovery
+* Logging
+
+Build:
+
+* ECS cluster
+* Task definition
+* ECS service
+* ALB integration
+* Health checks
+* Autoscaling
+
+Explain:
+
+* rolling deployments
+* zero downtime deployment
+* ECS scheduling
+* container lifecycle
+
+PHASE 9 — APPLICATION LOAD BALANCER
+Teach:
+
+* Layer 7 load balancing
+* Target groups
+* Health checks
+* Listener rules
+* SSL concepts
+* Request routing
+
+Build:
+
+* ALB
+* Listener
+* Target group
+* ECS attachment
+
+PHASE 10 — FRONTEND DEPLOYMENT
+
+* Build React app
+* Upload to S3
+* Configure static hosting
+* Configure bucket security
+* Create CloudFront distribution
+* Configure caching
+* Configure custom error pages
+* Configure API routing
+
+Teach:
+
+* CDN concepts
+* Edge caching
+* HTTPS
+* Cache invalidation
+
+PHASE 11 — GITHUB ACTIONS CI/CD
+This section must be ultra detailed.
+
+Teach:
+
+* CI/CD concepts
+* Pipelines
+* GitHub runners
+* Secrets management
+* Deployment automation
+
+Build:
+
+* workflow file
+* test step
+* Docker build step
+* ECR push step
+* ECS deploy step
+* stabilization wait step
+
+Explain:
+
+* rollback strategy
+* deployment safety
+* production CI/CD best practices
+
+PHASE 12 — TERRAFORM
+This section must be MASSIVELY detailed.
+
+Teach:
+
+* Infrastructure as Code deeply
+* Providers
+* Variables
+* Outputs
+* State files
+* Modules
+* Workspaces
+* Dependency graphs
+
+Build Terraform modules:
+
+* networking
+* security
+* database
+* compute
+* cdn
+
+Create:
+
+* environments/dev
+* environments/prod
+
+Explain:
+
+* terraform plan
+* terraform apply
+* terraform destroy
+
+VERY IMPORTANT:
+Show exact folder structures and exact Terraform files.
+
+PHASE 13 — MONITORING & OBSERVABILITY
+Teach:
+
+* monitoring concepts
+* metrics
+* logs
+* tracing
+* alerting
+* observability
+
+Build:
+
+* CloudWatch dashboard
+* ECS alarms
+* RDS alarms
+* ALB alarms
+* SNS notifications
+
+Explain:
+
+* p50/p95/p99 latency
+* error rates
+* CPU monitoring
+* memory monitoring
+
+PHASE 14 — CHAOS TESTING & PRODUCTION VALIDATION
+Teach:
+
+* high availability
+* resilience
+* failure recovery
+* chaos engineering basics
+
+Perform:
+
+* ECS task kill
+* CPU spike simulation
+* recovery validation
+
+Measure:
+
+* recovery time
+* scaling behavior
+
+PHASE 15 — PRODUCTION HARDENING
+Teach:
+
+* IAM least privilege
+* HTTPS everywhere
+* WAF basics
+* secret rotation
+* rate limiting
+* security best practices
+* backup strategies
+* disaster recovery
+* blue/green deployment concepts
+
+VERY IMPORTANT GLOBAL RULES:
+
+1. NEVER SKIP STEPS
+2. NEVER ASSUME PRIOR KNOWLEDGE
+3. ALWAYS EXPLAIN WHY
+4. ALWAYS EXPLAIN HOW TO VERIFY SUCCESS
+5. ALWAYS EXPLAIN COMMON ERRORS
+6. ALWAYS EXPLAIN INDUSTRY BEST PRACTICES
+7. ALWAYS EXPLAIN SECURITY IMPLICATIONS
+8. ALWAYS USE VISUAL ASCII DIAGRAMS
+9. ALWAYS SHOW COMPLETE FILE CONTENTS
+10. ALWAYS SHOW COMPLETE COMMANDS
+11. ALWAYS EXPLAIN COST CONSIDERATIONS
+12. ALWAYS EXPLAIN FREE TIER SAFETY
+13. ALWAYS EXPLAIN HOW REAL COMPANIES DO THIS
+14. ALWAYS TEACH LIKE A MENTOR
+15. ALWAYS EXPLAIN WHAT IS HAPPENING INTERNALLY
+
+I want this to feel like:
+
+* a complete cloud engineering bootcamp
+* a DevOps apprenticeship
+* a real production engineering walkthrough
+* a beginner-to-advanced roadmap
+* a portfolio-grade project
+
+At the end of every phase:
+
+* summarize what was learned
+* explain what skills were gained
+* explain how this maps to real cloud engineering jobs
+* give mini interview questions
+* give debugging exercises
+* give production-thinking exercises
+
+Do not shorten explanations.
+Do not compress steps.
+Do not skip infrastructure details.
+Do not simplify away production concepts.
+Teach everything deeply and thoroughly.
