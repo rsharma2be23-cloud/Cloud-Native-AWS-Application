@@ -16,7 +16,7 @@ const getItems = async (req, res) => {
     }
 }
 
-const createItems = async (req,res) => {
+const createItems = async (req, res, next) => {
     try {
         const { name } = req.body;
         const result = await pool.query("INSERT INTO items (name) VALUES ($1) RETURNING *", [name]);

@@ -1,0 +1,124 @@
+# Docker Compose lets you define and run multiple containers with one command.
+# This file replaces the long `docker run ...` command for PostgreSQL and also
+# starts your backend container so both containers can talk to each other.
+
+services:
+  # PostgreSQL database container.
+  # This is the Compose version of:
+  # docker run --name postgres-db --network app-network ...
+  postgres-db:
+    # Use the official PostgreSQL image.
+    # PostgreSQL 18+ uses a newer data directory layout inside the container.
+    image: postgres:18.4
+
+    # Give the container a fixed name, so commands like
+    # `docker logs postgres-db` and `docker exec -it postgres-db ...` work.
+    container_name: postgres-db
+
+    # Environment variables used by the postgres image on first startup.
+    # PostgreSQL creates this user, password, and database automatically.
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: cloudapp
+
+    # Maps your computer's port 5432 to the container's port 5432.
+    # This lets tools on your computer connect using:
+    # host=localhost, port=5432, user=postgres, password=root, db=cloudapp
+    ports:
+      - "5432:5432"
+
+    # Store database files in a named Docker volume.
+    # Without this, data can be lost when the container is removed.
+    #
+    # Important for postgres:18+:
+    # mount the volume at /var/lib/postgresql, not /var/lib/postgresql/data.
+    # Postgres 18 creates its real data directory under a version-specific
+    # folder, for example /var/lib/postgresql/18/docker.
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      # This SQL file runs automatically only when the database volume is new.
+      # It creates the `items` table needed by the backend.
+      #- ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+
+    # Healthcheck tells Docker when PostgreSQL is actually ready to accept
+    # connections. This is better than only checking that the container started.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cloudapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    # Attach this container to the same network as the backend.
+    networks:
+      - app-network
+
+  # Node/Express backend container.
+  backend:
+    # Build the backend image using backend/Dockerfile.
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    # Give the backend container a predictable name.
+    container_name: cloudapp-backend
+
+    # Wait until PostgreSQL reports healthy before starting the backend.
+    # This helps prevent startup errors where the app tries to connect too soon.
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+    # These environment variables are read by backend/src/db/index.js.
+    # Important: inside Docker, DB_HOST must be the database service name
+    # `postgres-db`, not `localhost`. In a container, localhost means the
+    # backend container itself, not the database container.
+    environment:
+      PORT: 3000
+      DB_HOST: postgres-db #name of the postgres service 
+      # jo tamare docker postgres ni jagyaye local postgres chalavvu hoy to "DB_HOST: host.docker.internal" lakhvu
+      DB_PORT: 5432
+      DB_USER: postgres #image's POSTGRES_USER
+      DB_PASSWORD: root
+      DB_NAME: cloudapp
+
+    # Maps your computer's port 3000 to the backend container's port 3000.
+    # Open http://localhost:3000 after the containers are running.
+    ports:
+      - "3000:3000"
+
+    # Attach backend to the same Docker network as postgres-db.
+    networks:
+      - app-network
+  
+  frontend:
+    build: ./frontend
+
+    container_name: frontend-container
+
+    ports:
+      - "5000:80"
+
+    depends_on:
+      - backend
+
+    networks:
+      - app-network
+
+# Named volumes are managed by Docker.
+# `postgres_data` keeps PostgreSQL data even if you stop/remove containers.
+
+volumes:
+  postgres_data:
+
+# This network already exists because you created it earlier with:
+# docker network create app-network
+#
+# `external: true` tells Compose:
+# "Do not create or manage this network. Just connect containers to it."
+# Without this, Compose expects special labels on the network and shows:
+# "incorrect label com.docker.compose.network"
+networks:
+  app-network:
+    name: app-network
+    external: true
