@@ -4,7 +4,7 @@ const pool = require("../db");
 
 const getItems = async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM items ORDER BY created_at DESC");
+        const result = await pool.query("SELECT * FROM items");
         res.status(200).json({
             success: true,
             count: result.rows.length,
