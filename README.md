@@ -1,321 +1,429 @@
-# Cloud-Native 3-Tier Application on AWS
+# Cloud-Native Full Stack Application on AWS
 
-## Overview
+![AWS](https://img.shields.io/badge/AWS-Cloud-orange)
+![React](https://img.shields.io/badge/React-Frontend-blue)
+![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
+![Docker](https://img.shields.io/badge/Docker-Containerization-blue)
+![ECS](https://img.shields.io/badge/Amazon-ECS-orange)
+![CloudFront](https://img.shields.io/badge/Amazon-CloudFront-orange)
 
-This project demonstrates the design and deployment of a production-style cloud-native 3-tier application on Amazon Web Services (AWS).
+## Project Overview
+
+This project is a production-style cloud-native full-stack application built as part of a practical Cloud Engineering and DevOps learning journey.
+
+The overall purpose remains the same: building a production-style cloud-native full-stack application on AWS to learn Cloud Engineering, DevOps, Backend Development, Containerization, and Cloud Infrastructure. The project scope has expanded to include frontend deployment using Amazon S3 and CloudFront.
 
 The application consists of:
 
-* Frontend Layer (React)
-* Backend Layer (Node.js + Express)
-* Database Layer (PostgreSQL)
-
-The backend is containerized using Docker and deployed on Amazon ECS Fargate. The database is hosted on Amazon RDS PostgreSQL. Application traffic is routed through an Application Load Balancer (ALB), while container images are stored in Amazon ECR.
-
-The project was built to gain hands-on experience with cloud engineering, DevOps practices, containerization, networking, security, and production deployment workflows.
+* React + Vite Frontend
+* Node.js + Express Backend
+* PostgreSQL Database
+* Docker Containerization
+* AWS ECS Fargate Deployment
+* AWS RDS PostgreSQL
+* AWS ECR Container Registry
+* AWS Application Load Balancer
+* AWS CloudFront CDN
+* AWS S3 Static Website Hosting
 
 ---
-
-# Architecture
-
-![Architecture Diagram](docs/architecture-diagram.png)
 
 ## High-Level Architecture
 
 ```text
-Users
-   │
-   ▼
-Application Load Balancer
-   │
-   ▼
-Amazon ECS Fargate
-   │
-   ▼
-Amazon RDS PostgreSQL
+                        Internet Users
+                               │
+                               ▼
+                       CloudFront CDN
+                               │
+                               ▼
+                     S3 Static React Frontend
+
+                               │
+                               ▼
+
+                    Application Load Balancer
+                               │
+                               ▼
+                        ECS Fargate Tasks
+                               │
+                               ▼
+                        Amazon RDS PostgreSQL
 ```
 
 ---
 
-# AWS Services Used
+## AWS Services Used
 
-| Service                   | Purpose                        |
-| ------------------------- | ------------------------------ |
-| Amazon ECS Fargate        | Container orchestration        |
-| Amazon ECR                | Container image registry       |
-| Amazon RDS PostgreSQL     | Managed relational database    |
-| Application Load Balancer | Traffic distribution           |
-| Amazon VPC                | Network isolation              |
-| NAT Gateway               | Private subnet internet access |
-| Internet Gateway          | Public internet connectivity   |
-| IAM                       | Access management              |
-| CloudWatch                | Monitoring and logging         |
-| Secrets Manager           | Secure secret storage          |
+### Networking
 
----
+* Amazon VPC
+* Public Subnets
+* Private Subnets
+* Database Subnets
+* Internet Gateway
+* Route Tables
+* Security Groups
+* NAT Gateway (during deployment)
 
-# Features
+### Compute
 
-### Backend
+* Amazon ECS Fargate
+* Application Load Balancer
 
-* REST API built with Express.js
-* PostgreSQL integration
-* Connection pooling
-* Centralized error handling
-* Environment-based configuration
-* Health check endpoint
-* Logging support
+### Storage
+
+* Amazon S3
 
 ### Database
 
-* PostgreSQL schema design
-* Seed data support
-* Secure database connectivity
-* Managed by Amazon RDS
+* Amazon RDS PostgreSQL
 
-### Containerization
+### Container Services
 
-* Dockerized Node.js application
-* Portable deployment
-* Consistent environments
+* Amazon ECR
 
-### Cloud Deployment
+### Content Delivery
 
-* ECS Fargate deployment
-* Load balancing
-* Health checks
-* Private networking
-* High availability architecture
+* Amazon CloudFront
+
+### Monitoring
+
+* Amazon CloudWatch
 
 ---
 
-# Project Structure
+## Features
 
-```text
-cloud-native-3tier-app/
-│
-├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── routes/
-│   │   ├── db/
-│   │   ├── middleware/
-│   │   └── app.js
-│   │
-│   ├── Dockerfile
-│   ├── package.json
-│   └── .env.example
-│
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   ├── Dockerfile
-│   └── package.json
-│
-├── docs/
-│   ├── architecture-diagram.png
-│   ├── ecs-cluster.png
-│   ├── rds-instance.png
-│   ├── ecr-repository.png
-│   ├── alb-target-group.png
-│   └── cloudwatch-logs.png
-│
-└── README.md
+### Backend Features
+
+* REST API Development
+* Express.js Server
+* PostgreSQL Integration
+* Connection Pooling
+* Centralized Error Handling
+* Environment Variables
+* Health Check Endpoint
+* Logging Support
+
+### Frontend Features
+
+* React + Vite
+* API Integration
+* Dynamic Data Loading
+* Error Handling
+* Environment-Based Configuration
+* Production React build using Vite
+* Static hosting through Amazon S3
+* CloudFront distribution
+* SPA routing support
+
+### Cloud Features
+
+* Dockerized Backend
+* ECS Fargate Deployment
+* CloudFront CDN
+* Private S3 Bucket with OAC
+* Application Load Balancer
+* CloudWatch Logging
+* Origin Access Control (OAC)
+* CloudFront cache invalidation
+* Private S3 bucket access through CloudFront
+
+---
+
+## Implemented API Endpoints
+
+### Health Check
+
+```http
+GET /health
+```
+
+### Fetch Items
+
+```http
+GET /api/items/getitems
+```
+
+### Create Item
+
+```http
+POST /api/items
+```
+
+### Metrics Endpoint
+
+```http
+GET /metrics
 ```
 
 ---
 
-# Networking Architecture
+## Docker Implementation
 
-The application is deployed inside a custom Amazon VPC.
+### Backend Containerization
 
-## VPC Layout
+Implemented:
+
+* Dockerfile
+* Multi-layer image build
+* Environment variable injection
+* ECS-compatible container image
+
+Docker is still used for:
+
+* Backend containerization
+* ECS deployment
+* ECR image storage
+
+### Image Storage
+
+Images are stored in:
 
 ```text
-VPC (10.0.0.0/16)
-
-├── Public Subnet A
-│   ├── ALB
-│   └── NAT Gateway
-│
-├── Public Subnet B
-│
-├── Private App Subnet A
-│   └── ECS Task
-│
-├── Private App Subnet B
-│   └── ECS Task
-│
-├── Database Subnet A
-│   └── RDS
-│
-└── Database Subnet B
-    └── RDS
+Amazon Elastic Container Registry (ECR)
 ```
 
 ---
 
-# ECS Deployment
+## ECS Deployment
 
-## ECS Components
+Backend application deployed using:
+
+* ECS Fargate
+* Task Definitions
+* ECS Services
+* Target Groups
+* Application Load Balancer
+* CloudWatch Logs
+
+Implemented:
+
+* Health Checks
+* Load Balancer Integration
+* Container Lifecycle Management
+
+---
+
+## Database Deployment
+
+Database hosted on:
+
+```text
+Amazon RDS PostgreSQL
+```
+
+Implemented:
+
+* Private Database Access
+* Security Group Restrictions
+* Database Connectivity from ECS
+* Seed Data Loading
+
+---
+
+## Frontend Deployment
+
+Frontend hosted using:
+
+```text
+Amazon S3
++
+Amazon CloudFront
+```
+
+Implemented:
+
+* Production React Build
+* Private S3 Bucket
+* CloudFront Distribution
+* Origin Access Control (OAC)
+* Cache Invalidation
+* SPA Routing Support
+* React production build
+* S3 static hosting
+* CloudFront CDN distribution
+* Private bucket configuration
+* CloudFront troubleshooting
+
+---
+
+## Challenges Solved
+
+### CloudFront Access Denied
+
+Issue:
+
+* CloudFront unable to access S3 objects
+
+Solution:
+
+* Configured Origin Access Control (OAC)
+* Updated Bucket Policy
+
+### React SPA Routing
+
+Issue:
+
+```text
+No routes matched location "/index.html"
+```
+
+Solution:
+
+* Configured Default Root Object
+* Configured SPA-compatible routing
+
+### Mixed Content Error
+
+Issue:
+
+```text
+HTTPS Frontend
+HTTP Backend
+```
+
+Result:
+
+```text
+Browser blocked API requests
+```
+
+Root Cause:
+
+* ALB configured only with HTTP Listener (Port 80)
+
+Future Solution:
+
+* Route53
+* ACM Certificate
+* HTTPS Listener (443)
+* SSL Termination
+
+### CloudFront Cache Issues
+
+* Implemented cache invalidation process
+
+---
+
+## Security Implementations
+
+Implemented:
+
+* Private S3 Bucket
+* Origin Access Control (OAC)
+* Security Groups
+* Private ECS Networking
+* Isolated Database Subnets
+* Environment Variables
+* Principle of Least Exposure
+* Restricted bucket access through CloudFront only
+* Security group isolation
+* Private ECS deployment
+* Private RDS deployment
+
+---
+
+## Screenshots
+
+### Architecture Diagram
+
+![Architecture](docs/architecture-diagram-2.png)
+
+### CloudFront Distribution
+
+![CloudFront](docs/cloudfront-distribution.png)
+
+### S3 Bucket
+
+![S3](docs/s3-hosting.png)
 
 ### ECS Cluster
 
-Runs and manages application workloads.
-
-### ECS Service
-
-Maintains the desired number of running tasks.
-
-### Task Definition
-
-Defines:
-
-* Docker image
-* CPU
-* Memory
-* Port mappings
-* Environment variables
-* Logging configuration
-
-### Fargate
-
-Serverless compute engine used to run containers without managing EC2 instances.
-
----
-
-# Database
-
-## Amazon RDS PostgreSQL
-
-Features:
-
-* Managed PostgreSQL service
-* Automated backups
-* Security group protection
-* Private subnet deployment
-* Encryption support
-* Multi-AZ ready architecture
-
----
-
-# Security
-
-Security best practices implemented:
-
-* Private ECS tasks
-* Private RDS instance
-* Security-group-based access control
-* Least-privilege IAM roles
-* Secrets Manager integration
-* No hardcoded credentials
-* Network isolation through VPC design
-
----
-
-# Monitoring
-
-Amazon CloudWatch is used for:
-
-* Container logs
-* Application troubleshooting
-* ECS monitoring
-* Health-check verification
-
----
-
-# Screenshots
-
-## ECS Cluster
-
 ![ECS](docs/ecs-photo.png)
 
-## ECR Repository
+### RDS PostgreSQL
 
-![ECR](docs/ecr-photo.png)
+![RDS](docs/rds.png)
 
-## Output JSON photo
+### Application Load Balancer
 
-![RDS](docs/outputjson.png)
+![ALB](docs/alb.jpg)
 
-## ALB Target Group
-
-![ALB](docs/alb-target-group.png)
-
-## CloudWatch Logs
+### CloudWatch Logs
 
 ![CloudWatch](docs/cloudwatch-logs.png)
 
 ---
 
-# Learning Outcomes
+## Skills Demonstrated
 
-Through this project I gained hands-on experience with:
+### Cloud Engineering
 
-* AWS ECS Fargate
-* Amazon RDS PostgreSQL
-* Amazon ECR
-* Docker
-* Application Load Balancer
-* VPC Networking
-* Public and Private Subnets
+* AWS Networking
+* VPC Design
 * Security Groups
-* Route Tables
-* NAT Gateway
-* CloudWatch Logging
-* Secrets Management
-* Cloud Troubleshooting
-
----
-
-# Challenges Solved
-
-During implementation, several real-world issues were diagnosed and resolved:
-
-* PostgreSQL authentication failures
-* Security group misconfigurations
-* Route table connectivity issues
-* ECS task startup failures
-* RDS connection problems
-* SSL configuration issues
-* Docker image deployment issues
-* Health-check failures
-
-These troubleshooting exercises provided practical cloud engineering experience beyond basic deployment.
-
----
-
-# Future Improvements
-
-Planned enhancements include:
-
-* React frontend deployment
-* Amazon S3 static hosting
+* Subnet Design
+* CloudFront
+* S3
+* ECS
+* ECR
+* RDS
+* Amazon S3 Static Hosting
 * Amazon CloudFront CDN
-* Auto Scaling policies
-* HTTPS with ACM certificates
-* Production monitoring dashboards
-* Blue-Green deployments
+* Origin Access Control (OAC)
+* CloudFront Cache Invalidation
+* Frontend Production Deployment
+* React SPA Routing in CloudFront
+* Mixed Content Debugging
+* CloudFront Security Configuration
+
+### Backend Engineering
+
+* Node.js
+* Express.js
+* REST APIs
+* PostgreSQL
+* Connection Pooling
+* Error Handling
+
+### DevOps
+
+* Docker
+* Containerization
+* ECS Deployments
+* CloudWatch Logging
+
+### System Design
+
+* Multi-Tier Architecture
+* Load Balancing
+* CDN Architecture
+* Database Isolation
+* Secure Networking
 
 ---
 
-# Resume Highlights
+## Future Enhancements
 
-* Designed and deployed a cloud-native 3-tier application on AWS.
-* Containerized Node.js backend using Docker.
-* Deployed workloads using Amazon ECS Fargate.
-* Integrated Amazon RDS PostgreSQL database.
-* Configured Application Load Balancer and health checks.
-* Implemented secure VPC networking using public and private subnets.
-* Integrated CloudWatch logging and monitoring.
-* Performed troubleshooting of networking, authentication, and deployment issues.
+* GitHub Actions CI/CD
+* Terraform Infrastructure as Code
+* Route53
+* ACM Certificates
+* HTTPS-enabled ALB
+* CloudWatch Dashboards
+* SNS Alerting
+* Auto Scaling Policies
+* WAF Integration
+* Production Hardening
 
----
-
-# Author
+## Author
 
 Viraj Solanki
 
 B.Tech Computer Engineering
 
 Cloud Engineering & DevOps Enthusiast
+
