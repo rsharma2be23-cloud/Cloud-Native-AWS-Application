@@ -1,28 +1,22 @@
-const {Pool} = require("pg");
-console.log("SSL CONFIG ACTIVE");
-console.log({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  database: process.env.DB_NAME
-});
+const { Pool } = require("pg");
+const { db } = require("../config/env");
+
 const pool = new Pool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    ssl: {
-    rejectUnauthorized: false
-  }
-})
+  host: db.host,
+  port: db.port,
+  user: db.user,
+  password: db.password,
+  database: db.database,
+  ssl: db.ssl,
+});
 
 
-pool.on("connect", ()=> {
-    console.log("Connected to the postgreSQL database successfully");
-})
+pool.on("connect", () => {
+  console.log("Connected to the PostgreSQL database successfully");
+});
 
 pool.on("error", (err) => {
-    console.error("Error connecting to the postgreSQL database", err);
-})
+  console.error("Error connecting to the PostgreSQL database", err);
+});
 
-module.exports = pool
+module.exports = pool;
