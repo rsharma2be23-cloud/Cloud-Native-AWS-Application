@@ -13,6 +13,8 @@ jobs:
 
   deploy:
 
+    environment: github actions env keys
+    
     runs-on: ubuntu-latest
 
     steps:
