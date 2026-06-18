@@ -15,6 +15,8 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+RUN apk add --no-cache curl
+
 # Copy all project files
 COPY . .
 
