@@ -250,6 +250,46 @@ Implemented:
 
 ---
 
+# CI/CD Pipeline
+
+## GitHub Actions workflow automates:
+
+* Source code checkout
+* Dependency installation
+* Automated testing
+* Docker image build
+* Amazon ECR image push
+* ECS deployment automation
+* Deployment validation
+
+The pipeline enables continuous integration and continuous delivery directly from GitHub to AWS.
+
+---
+
+# Infrastructure as Code
+
+## Terraform modules implemented for:
+
+* Networking Module
+* Security Module
+* Database Module
+
+## Key Terraform capabilities demonstrated:
+
+* Modular Infrastructure Design
+* State Management
+* State Migration (terraform state mv)
+* Resource Import (terraform import)
+* Drift Detection and Resolution
+* Reusable Infrastructure Components
+* Monitoring
+* CloudWatch Logs integration
+* ECS application logging
+* Deployment troubleshooting workflow
+* Infrastructure validation through Terraform plans
+
+---
+
 ## Challenges Solved
 
 ### CloudFront Access Denied
