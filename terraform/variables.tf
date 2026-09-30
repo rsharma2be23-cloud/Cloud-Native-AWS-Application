@@ -17,6 +17,19 @@ variable "environment" {
 }
 
 variable "db_password" {
+  description = "Password for the PostgreSQL application user"
   type      = string
   sensitive = true
+}
+
+variable "db_username" {
+  description = "PostgreSQL application username"
+  type        = string
+  default     = "postgres"
+}
+
+variable "db_name" {
+  description = "PostgreSQL database name"
+  type        = string
+  default     = "cloudapp"
 }

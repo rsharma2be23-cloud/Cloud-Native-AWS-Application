@@ -15,7 +15,7 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 
   tags = {
-    Name        = "cloudapp-vpc"
+    Name        = "${var.project_name}-vpc"
     Environment = var.environment
     Project     = var.project_name
   }
@@ -122,7 +122,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name        = "cloudapp-igw"
+    Name        = "${var.project_name}-igw"
     Environment = var.environment
     Project     = var.project_name
   }
@@ -137,7 +137,7 @@ resource "aws_eip" "nat" {
   domain = "vpc"
 
   tags = {
-    Name = "cloudapp-nat-eip"
+    Name = "${var.project_name}-nat-eip"
   }
 }
 
@@ -152,7 +152,7 @@ resource "aws_nat_gateway" "main" {
   subnet_id = aws_subnet.public_a.id
 
   tags = {
-    Name = "cloudapp-nat"
+    Name = "${var.project_name}-nat"
   }
 
   depends_on = [

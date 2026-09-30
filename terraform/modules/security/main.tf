@@ -4,7 +4,7 @@
 
 resource "aws_security_group" "alb" {
 
-  name        = "cloudapp-alb-sg"
+  name        = "${var.project_name}-alb-sg"
   description = "ALB Security Group"
 
   vpc_id = var.vpc_id
@@ -43,7 +43,7 @@ resource "aws_security_group" "alb" {
   }
 
   tags = {
-    Name = "cloudapp-alb-sg"
+    Name = "${var.project_name}-alb-sg"
   }
 }
 
@@ -53,7 +53,7 @@ resource "aws_security_group" "alb" {
 
 resource "aws_security_group" "ecs" {
 
-  name        = "cloudapp-ecs-sg"
+  name        = "${var.project_name}-ecs-sg"
   description = "ECS Security Group"
 
   vpc_id = var.vpc_id
@@ -81,7 +81,7 @@ resource "aws_security_group" "ecs" {
   }
 
   tags = {
-    Name = "cloudapp-ecs-sg"
+    Name = "${var.project_name}-ecs-sg"
   }
 }
 
@@ -91,7 +91,7 @@ resource "aws_security_group" "ecs" {
 
 resource "aws_security_group" "rds" {
 
-  name        = "cloudapp-rds-sg"
+  name        = "${var.project_name}-rds-sg"
   description = "RDS Security Group"
 
   vpc_id = var.vpc_id
@@ -119,6 +119,6 @@ resource "aws_security_group" "rds" {
   }
 
   tags = {
-    Name = "cloudapp-rds-sg"
+    Name = "${var.project_name}-rds-sg"
   }
 }

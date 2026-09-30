@@ -13,15 +13,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
-
-RUN apk add --no-cache curl
+RUN npm ci
 
 # Copy all project files
 COPY . .
 
 # Expose backend port
-EXPOSE 5000
+EXPOSE 3000
 
 # Start server
 CMD ["npm", "start"]

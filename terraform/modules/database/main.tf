@@ -1,17 +1,17 @@
 resource "aws_db_subnet_group" "main" {
 
-  name = "cloudapp-db-subnet-group"
+  name = "${var.project_name}-db-subnet-group"
 
   subnet_ids = var.database_subnet_ids
 
   tags = {
-    Name = "cloudapp-db-subnet-group"
+    Name = "${var.project_name}-db-subnet-group"
   }
 }
 
 resource "aws_secretsmanager_secret" "db_secret" {
 
-  name = "cloudapp-db-secret"
+  name = "${var.project_name}-db-secret"
 }
 
 resource "aws_secretsmanager_secret_version" "db_secret_version" {
@@ -19,16 +19,14 @@ resource "aws_secretsmanager_secret_version" "db_secret_version" {
   secret_id = aws_secretsmanager_secret.db_secret.id
 
   secret_string = jsonencode({
-
-    username = "postgres"
-
+    username = var.db_username
     password = var.db_password
   })
 }
 
 resource "aws_db_instance" "postgres" {
 
-  identifier = "cloudapp-postgres"
+  identifier = "${var.project_name}-postgres"
 
   engine = "postgres"
 
@@ -40,9 +38,9 @@ resource "aws_db_instance" "postgres" {
 
   storage_type = "gp3"
 
-  db_name = "cloudapp"
+  db_name = var.db_name
 
-  username = "postgres"
+  username = var.db_username
 
   password = var.db_password
 
