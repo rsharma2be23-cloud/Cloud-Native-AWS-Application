@@ -11,9 +11,9 @@ output "ecs_cluster_name" {
 }
 
 output "ecs_service_name" {
-  value = aws_ecs_service.backend.name
+  value = "${var.project_name}-backend"
 }
 
 output "ecs_task_definition_family" {
-  value = aws_ecs_task_definition.backend.family
+  value = "${var.project_name}-backend"
 }

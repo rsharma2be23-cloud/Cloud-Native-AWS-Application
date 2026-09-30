@@ -44,5 +44,6 @@ module "compute" {
   db_host               = module.database.db_host
   db_name               = var.db_name
   db_secret_arn         = module.database.secret_arn
+  backend_image         = var.backend_image
 }
 

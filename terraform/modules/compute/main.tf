@@ -13,7 +13,7 @@ resource "aws_ecr_repository" "backend" {
 }
 
 locals {
-  bootstrap_image = "${aws_ecr_repository.backend.repository_url}:bootstrap"
+  ecs_enabled = var.backend_image != ""
 }
 
 resource "aws_cloudwatch_log_group" "backend" {
@@ -116,6 +116,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_ecs_task_definition" "backend" {
+  count                    = local.ecs_enabled ? 1 : 0
   family                   = "${var.project_name}-backend"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
@@ -126,7 +127,7 @@ resource "aws_ecs_task_definition" "backend" {
 
   container_definitions = jsonencode([{
     name      = "backend"
-    image     = local.bootstrap_image
+    image     = var.backend_image
     essential = true
     portMappings = [{
       containerPort = var.backend_port
@@ -164,11 +165,12 @@ resource "aws_ecs_task_definition" "backend" {
 }
 
 resource "aws_ecs_service" "backend" {
-  name            = "${var.project_name}-backend"
-  cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.backend.arn
-  desired_count   = var.desired_count
-  launch_type     = "FARGATE"
+  count                             = local.ecs_enabled ? 1 : 0
+  name                              = "${var.project_name}-backend"
+  cluster                           = aws_ecs_cluster.main.id
+  task_definition                   = aws_ecs_task_definition.backend[0].arn
+  desired_count                     = var.desired_count
+  launch_type                       = "FARGATE"
   health_check_grace_period_seconds = 120
 
   network_configuration {
@@ -181,6 +183,10 @@ resource "aws_ecs_service" "backend" {
     target_group_arn = aws_lb_target_group.backend.arn
     container_name   = "backend"
     container_port   = var.backend_port
+  }
+
+  lifecycle {
+    ignore_changes = [task_definition]
   }
 
   depends_on = [aws_lb_listener.http, aws_iam_role_policy_attachment.execution_managed, aws_iam_role_policy.read_database_secret]

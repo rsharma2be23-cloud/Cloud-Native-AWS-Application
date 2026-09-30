@@ -42,6 +42,10 @@ variable "db_secret_arn" {
   type = string
 }
 
+variable "backend_image" {
+  type = string
+}
+
 variable "backend_port" {
   type    = number
   default = 3000

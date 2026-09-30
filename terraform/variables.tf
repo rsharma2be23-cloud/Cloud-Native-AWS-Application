@@ -33,3 +33,9 @@ variable "db_name" {
   type        = string
   default     = "cloudapp"
 }
+
+variable "backend_image" {
+  description = "Full ECR image URI and tag for the ECS backend. Leave empty to create infrastructure before the first image is pushed."
+  type        = string
+  default     = ""
+}

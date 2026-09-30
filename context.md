@@ -206,6 +206,7 @@ No AI/ML/LLM, embedding, vector store, RAG, agent, model prompt, or related depe
 | `project_name` | Terraform project tag/name input | No; defaults `cloudapp` | Terraform root/network module |
 | `environment` | Terraform environment tag input | No; defaults `dev` | Terraform root/modules |
 | `db_password` | RDS master password and Secrets Manager payload | Yes; sensitive Terraform input (Terraform state still needs protection) | Terraform database module |
+| `backend_image` | Full ECR image URI and tag; empty omits ECS task definition and service | No; defaults empty for initial infrastructure stage | Terraform root/compute module |
 | GitHub `AWS_ROLE_TO_ASSUME` | ARN for an AWS role trusted by the repository's GitHub OIDC subject | Yes for workflow deploy | GitHub Actions secret |
 | GitHub variable `AWS_REGION` | AWS region used in deploy workflow | Yes for workflow deploy | GitHub Actions variable |
 | GitHub variable `ECR_REPOSITORY` | ECR repository name (default `cloudapp-backend`) | Yes for workflow deploy | GitHub Actions variable |
@@ -297,7 +298,7 @@ Run from the indicated directory:
 | Repository root | `docker compose up --build` | Start Compose-managed PostgreSQL, API, and frontend containers; DB schema initializes on fresh volume |
 | `terraform/` | `terraform init`, `terraform fmt -recursive`, `terraform validate`, `terraform plan` | Initialize, format, validate, and plan; apply requires AWS credentials and `db_password` input |
 
-No root install/run/build/test scripts, formatter, frontend tests, or dedicated deployment script are configured. Schema bootstrap is `backend/src/db/schema.sql`; run it against AWS RDS once after infrastructure creation. Workflow commands are encoded in `.github/workflows/deploy.yml`.
+No root install/run/build/test scripts, formatter, frontend tests, or dedicated deployment script are configured. Schema bootstrap is `backend/src/db/schema.sql`; run it against AWS RDS once after infrastructure creation. For first provisioning, leave `backend_image` empty. After pushing an image, set its full URI in the ignored `terraform/terraform.tfvars` and reapply to create the task definition and service. Keep this value configured so later Terraform plans retain ECS resources. Workflow commands are encoded in `.github/workflows/deploy.yml`.
 
 ## 17. Deployment and Infrastructure
 
@@ -307,7 +308,7 @@ No root install/run/build/test scripts, formatter, frontend tests, or dedicated 
 - Networking module: VPC `10.0.0.0/16`, two public subnets (`10.0.1.0/24`, `.2.0/24`), two private subnets (`10.0.11.0/24`, `.12.0/24`), two isolated DB subnets (`10.0.21.0/24`, `.22.0/24`), IGW, one EIP/NAT gateway in public subnet A, public routes to IGW, private routes to NAT, and DB route table without a default route.
 - Security module: ALB SG allows inbound TCP 80 and 443 from all IPv4; ECS SG allows inbound TCP 3000 from ALB SG; RDS SG allows TCP 5432 from ECS SG. Egress is open in all three.
 - Database module: DB subnet group, Secrets Manager secret/version containing configurable username/password, and private RDS PostgreSQL 15 `db.t3.micro`, 20 GB gp3, encrypted, 7-day backup retention, single-AZ, skip final snapshot true.
-- Compute module: immutable-tag ECR repository with image scanning, CloudWatch log group (14-day retention), ECS Fargate cluster/task/service, public ALB with HTTP 80 listener and IP target group on backend port 3000, `/health` target check, private tasks without public IP, execution role for standard ECR/log access plus secret-specific `GetSecretValue`, and app task role with no AWS permissions. Secrets are injected into `DB_USER`/`DB_PASSWORD`; other DB settings are task environment. Task definition initially references the ECR `bootstrap` tag; push a bootstrap image after the repository is created, then CI deploys SHA/run-ID/attempt-tagged images. Root outputs include ALB DNS, ECR URL, ECS names/task family, and DB endpoint.
+- Compute module: immutable-tag ECR repository with image scanning, CloudWatch log group (14-day retention), ECS Fargate cluster, public ALB with HTTP 80 listener and IP target group on backend port 3000, `/health` target check, private tasks without public IP, execution role for standard ECR/log access plus secret-specific `GetSecretValue`, and app task role with no AWS permissions. ECS task definition and service are created only when configurable `backend_image` is nonempty; initial Terraform provisioning therefore needs no application image. Secrets are injected into `DB_USER`/`DB_PASSWORD`; other DB settings are task environment. GitHub Actions deploys SHA/run-ID/attempt-tagged images; the ECS service ignores task-definition drift so Terraform does not roll back CI deployments. Root outputs include ALB DNS, ECR URL, ECS names/task family, and DB endpoint.
 - No frontend hosting, S3, CloudFront, DNS, certificate, HTTPS listener, or GitHub OIDC role/provider is created by Terraform. Configure the OIDC IAM role/trust and least-privilege deploy policy in AWS for the repository. ALB SG allows TCP 80/443, but only HTTP port 80 has a listener.
 
 ### Containers and hosting claims
